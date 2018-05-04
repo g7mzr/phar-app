@@ -1,0 +1,23 @@
+{
+    "name": "g7mzr/phar-app",
+    "description": "This is a test project for creating composer based phar applications.",
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "Sandy McNeil",
+            "email": "g7mzrdev@gmail.com"
+        }
+    ],
+    "require": {
+        "ulrichsg/getopt-php" : "^3.0"
+    },
+    "autoload": {
+        "psr-0": {"g7mzr": "src/" }
+    },
+    "bin": ["bin/phar-app"],
+    "extra": {
+        "phar": {
+            "bundler": "composer"
+        }
+    }
+}
