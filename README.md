@@ -8,7 +8,7 @@ php phar files work.
 I have developed a small test application that is stored in github and can be built
 into a phar file.
 
-I use [clue/phar-composer](https://github.com/clue/phar-composer) to create the phar
+I use [MacFJA/PharBuilder](https://github.com/MacFJA/PharBuilder) to create the phar
 file.
 
 ##  Usage
@@ -27,8 +27,9 @@ To try out phar-app follow the instructions below:
 
 3. Run composer install in the phar-app directory.
 
-4. To create the phar file run the following command which assumes that phar-composer in your path
+4. To create the phar file run the following command, which assumes that phar-builder
+in your path, from the project directory.  The phar file will be located in the parent directory
 
-    * phar-composer build phar-app
+    * phar-builder package composer.json
 
 

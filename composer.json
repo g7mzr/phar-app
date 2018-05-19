@@ -12,12 +12,20 @@
         "ulrichsg/getopt-php" : "^3.0"
     },
     "autoload": {
-        "psr-0": {"g7mzr": "src/" }
+        "psr-4": {"g7mzr\\pharapp\\": "src/" }
     },
     "bin": ["bin/phar-app"],
     "extra": {
-        "phar": {
-            "bundler": "composer"
+        "phar-builder": {
+            "compression": "GZip",
+            "name": "phar-app.phar",
+            "output-dir": "../",
+            "entry-point": "./bin/phar-app",
+            "include": ["bin"],
+            "include-dev": false,
+            "events": {
+                "command.package.after": ["chmod +x ../phar-app.phar"]
+            }
         }
     }
 }
