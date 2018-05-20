@@ -19,7 +19,7 @@ To try out phar-app follow the instructions below:
 
     * composer
 
-    * phar-composer
+    * phar-builder
 
 2. Clone phar-app using the following command
 
