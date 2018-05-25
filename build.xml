@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="phar-app" default="build" basedir="." description="This is the Phing buildfile for phar-app.">
+
+    <!-- Set up default directories -->
+    <property name="basedir" value="${project.basedir}" />
+    <property name="toolsdir" value="${basedir}/vendor/bin/"/>
+
+    <!-- The default build location -->
+    <property name="builddir" value="${basedir}/build/"/>
+
+    <!-- The default location for the compser phar -->
+    <property name="composerphar" value="${basedir}/build/composer.phar"/>
+
+    <!-- ================================================================== -->
+    <!--                 Targets to Setup the Build Tools                   -->
+    <!-- ================================================================== -->
+
+    <target name="php-check">
+        <condition property="php" value="php">
+            <not>
+                <isset property="${php}"/>
+            </not>
+        </condition>
+    </target>
+
+    <target name="composer-check">
+        <available file="${composerphar}" property="composer.present"/>
+    </target>
+
+    <target name="composer-download"
+            depends="composer-check"
+            unless="composer.present">
+        <property name="composer.noselfupdate" value="true"/>
+        <exec executable="wget" dir="${builddir}" passthru="true" logoutput="true">
+            <arg line="https://getcomposer.org/composer.phar" />
+        </exec>
+    </target>
+
+    <target name="composer-selfupdate"
+            depends="php-check,composer-download"
+            unless="composer.noselfupdate">
+        <exec executable="${php}">
+            <arg value="${composerphar}"/>
+            <arg value="self-update"/>
+            <arg value="--quiet"/>
+        </exec>
+    </target>
+
+    <!-- Install or Update the Dependancies -->
+    <target name="composer-install"
+            depends="composer-selfupdate"
+            description="Installing composer dependencies">
+        <exec executable="php" passthru="true" logoutput="true">
+            <arg value="${composerphar}" />
+            <arg value="install" />
+            <arg value="--prefer-dist" />
+            <arg value="--no-progress" />
+        </exec>
+    </target>
+
+    <target name="composer-update"
+            depends="composer-selfupdate"
+            description="Manual update composer dependencies">
+        <exec executable="php" passthru="true" logoutput="true">
+            <arg value="${composerphar}" />
+            <arg value="update" />
+            <arg value="--prefer-dist" />
+            <arg value="--no-progress" />
+        </exec>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!--             Targets used to CLEAN the BUILD ENVIRONMENT            -->
+    <!-- ================================================================== -->
+    <target name="clean-artifacts">
+        <delete dir="${basedir}/build/logs"/>
+        <property name="clean.done" value="true"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!--           Targets used to PREPARE the BUILD ENVIRONMENT            -->
+    <!-- ================================================================== -->
+
+    <target name="prepare-build"
+            unless="prepare.done"
+            depends="composer-install, clean"
+            description="Prepare for build">
+        <mkdir dir="${basedir}/build/logs"/>
+        <property name="prepare.done" value="true"/>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!--                          Build Targets                             -->
+    <!-- ================================================================== -->
+
+    <target name="composer" depends="composer-install"/>
+
+    <target name="clean" depends="clean-artifacts"/>
+
+    <target name="prepare" depends="clean, prepare-build"/>
+
+
+    <!-- Default Build Target -->
+    <target name="build"
+            depends="composer, clean, prepare"/>
+
+</project>
