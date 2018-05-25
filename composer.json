@@ -19,12 +19,12 @@
         "phar-builder": {
             "compression": "GZip",
             "name": "phar-app.phar",
-            "output-dir": "../",
+            "output-dir": "./build",
             "entry-point": "./bin/phar-app",
             "include": ["bin"],
             "include-dev": false,
             "events": {
-                "command.package.after": ["chmod +x ../phar-app.phar"]
+                "command.package.end": ["chmod +x ./build/phar-app.phar"]
             }
         }
     }
