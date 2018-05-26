@@ -92,7 +92,40 @@
     </target>
 
 
+    <!-- ================================================================== -->
+    <!--                      Code Analysis Targets                         -->
+    <!-- ================================================================== -->
+     <target name="lint" description="Perform syntax check of sourcecode files">
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
 
+            <fileset dir="${basedir}/bin">
+                <include name="**/*" />
+            </fileset>
+
+            <fileset dir="${basedir}/src">
+                <include name="**/*.php" />
+            </fileset>
+        </apply>
+    </target>
+
+   <target name="phpcs"
+        description="Find coding standard violations using PHP_CodeSniffer.">
+        <exec checkreturn="true" passthru="true" logoutput="true" executable="${toolsdir}phpcs">
+            <arg value="--standard=${basedir}/build/phpcs.xml" />
+            <arg value="--extensions=php" />
+            <arg value="--ignore=autoload.php " />
+            <arg path="${basedir}/src" />
+         </exec>
+    </target>
+
+    <target name="phpcbf"
+            description="Fix coding standard violations using PHP_CodeSniffer.">
+        <exec executable="${toolsdir}phpcbf" passthru="true" logoutput="true">
+            <arg value="--standard=${basedir}/build/phpcs.xml" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
 
 
     <!-- ================================================================== -->
@@ -118,9 +151,10 @@
 
     <target name="prepare" depends="clean, prepare-build"/>
 
+    <target name="code-analysis" depends="lint, phpcs" />
 
     <!-- Default Build Target -->
     <target name="build"
-            depends="composer, clean, prepare, build-phar"/>
+            depends="composer, clean, prepare, code-analysis, build-phar"/>
 
 </project>

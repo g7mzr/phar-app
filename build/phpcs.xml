@@ -1,0 +1,14 @@
+<ruleset name="pharapp">
+    <description>PharApp Coding Standard</description>
+
+        <!--  Default Standard is PSR2 -->
+        <rule ref="PSR2"/>
+
+        <!-- Include the PEAR Commenting Standard to ensure code is commented -->
+        <rule ref="PEAR.Commenting">
+            <exclude name="PEAR.Commenting.ClassComment.InvalidAuthors"/>
+            <exclude name="PEAR.Commenting.ClassComment.IncompleteLicense"/>
+            <exclude name="PEAR.Commenting.ClassComment.MissingCategoryTag"/>
+            <exclude name="PEAR.Commenting.ClassComment.MissingLinkTag"/>
+        </rule>
+</ruleset>
