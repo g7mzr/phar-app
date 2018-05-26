@@ -11,6 +11,9 @@
     "require": {
         "ulrichsg/getopt-php" : "^3.0"
     },
+    "require-dev": {
+        "macfja/phar-builder" : "*"
+    },
     "autoload": {
         "psr-4": {"g7mzr\\pharapp\\": "src/" }
     },

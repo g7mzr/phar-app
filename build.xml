@@ -75,6 +75,7 @@
     <!-- ================================================================== -->
     <target name="clean-artifacts">
         <delete dir="${basedir}/build/logs"/>
+        <delete file="${basedir}/build/phar-app.phar" />
         <property name="clean.done" value="true"/>
     </target>
 
@@ -91,6 +92,22 @@
     </target>
 
 
+
+
+
+    <!-- ================================================================== -->
+    <!--           Targets used to Build the Phar file            -->
+    <!-- ================================================================== -->
+
+    <target name="build-phar"
+            depends="prepare"
+            description="Build the Phar file">
+        <exec executable="${toolsdir}phar-builder">
+            <arg value="package" />
+            <arg path="${basedir}/composer.json" />
+        </exec>
+    </target>
+
     <!-- ================================================================== -->
     <!--                          Build Targets                             -->
     <!-- ================================================================== -->
@@ -104,6 +121,6 @@
 
     <!-- Default Build Target -->
     <target name="build"
-            depends="composer, clean, prepare"/>
+            depends="composer, clean, prepare, build-phar"/>
 
 </project>
