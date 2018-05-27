@@ -127,6 +127,14 @@
         </exec>
     </target>
 
+    <target name="phpmd"
+            description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
+        <exec executable="${toolsdir}phpmd" passthru="true" logoutput="true">
+            <arg path="${basedir}/src/" />
+            <arg value="text" />
+            <arg path="${basedir}/build/phpmd.xml" />
+        </exec>
+    </target>
 
     <!-- ================================================================== -->
     <!--           Targets used to Build the Phar file            -->
