@@ -1,4 +1,8 @@
 <ruleset name="pharapp">
+    <!-- Configs -->
+    <arg name="colors" /> <!-- Use Colours -->
+    <arg value="sp" />    <!-- Show progress.  Show shifs in report -->
+
     <description>PharApp Coding Standard</description>
 
         <!--  Default Standard is PSR2 -->
