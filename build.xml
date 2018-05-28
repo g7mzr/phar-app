@@ -159,7 +159,7 @@
 
     <target name="prepare" depends="clean, prepare-build"/>
 
-    <target name="code-analysis" depends="lint, phpcs" />
+    <target name="code-analysis" depends="lint, phpcs, phpmd" />
 
     <!-- Default Build Target -->
     <target name="build"
