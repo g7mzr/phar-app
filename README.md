@@ -17,19 +17,24 @@ To try out phar-app follow the instructions below:
 
 1. The following phar files are required to use phar-app:
 
-    * composer
-
-    * phar-builder
+    * phing
 
 2. Clone phar-app using the following command
 
     * git clone https://github.com/g7mzr/phar-app.git
 
-3. Run composer install in the phar-app directory.
+3. Run phing in the phar-app directory.  This will:
 
-4. To create the phar file run the following command, which assumes that phar-builder
-in your path, from the project directory.  The phar file will be located in the parent directory
+    * Install composer
+    * The project dependencies using composer
+    * Build the phar-app.phar file.  This can be found in the build directory.
 
-    * phar-builder package composer.json
+4. To run phar-app.phar and display the program help us the following command:
 
+    * build/phar-app.phar
 
+## Notes
+
+1.In order to use phing to install composer you will need **wget** installed on your
+system.  If **wget** is not installed please install a copy of composer.phar in the build
+directory.

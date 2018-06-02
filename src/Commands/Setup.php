@@ -1,22 +1,40 @@
 <?php
+/**
+ * This file is part of PharApp
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or follow the link below.
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * @category  PHP
+ * @package   PharApp
+ * @author    Sandy McNeil <g7mzrdev@gmail.com>
+ * @copyright 2018 Sandy McNeil
+ * @license   https://github.com/g7mzr/phar-app/blob/master/LICENSE GNU GPL v3.0
+ * @link      https://github.com/g7mzr/phar-app
  */
-
 namespace g7mzr\pharapp\Commands;
 
+use GetOpt\GetOpt;
+
 /**
- * Description of Setup
+ * Setup is a test command for PharApp.
  *
- * @author Sandy McNeil
+ * @package  PharApp
+ * @author   Sandy McNeil <g7mzrdev@gmail.com>
+ * @license  https://github.com/g7mzr/phar-app/blob/master/LICENSE GNU GPL v3.0
  */
 class Setup
 {
-    static function setup()
+    /**
+     * This is a test function for PharApp
+     *
+     * @param GetOpt $getOpt Pointer to the GetOpt structure for PharApp
+     *
+     * @return boolen False in an error is encountered.  True otherwise.
+     */
+    public static function setup(GetOpt $getOpt)
     {
-        echo "Setup Works" . PHP_EOL;
+        echo $getOpt->getCommand()->getName() . " works" . PHP_EOL;
+        return true;
     }
 }

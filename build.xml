@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="phar-app" default="build" basedir="." description="This is the Phing buildfile for phar-app.">
+
+    <!-- Set up default directories -->
+    <property name="basedir" value="${project.basedir}" />
+    <property name="toolsdir" value="${basedir}/vendor/bin/"/>
+
+    <!-- The default build location -->
+    <property name="builddir" value="${basedir}/build/"/>
+
+    <!-- The default location for the compser phar -->
+    <property name="composerphar" value="${basedir}/build/composer.phar"/>
+
+    <!-- ================================================================== -->
+    <!--                 Targets to Setup the Build Tools                   -->
+    <!-- ================================================================== -->
+
+    <target name="php-check">
+        <condition property="php" value="php">
+            <not>
+                <isset property="${php}"/>
+            </not>
+        </condition>
+    </target>
+
+    <target name="composer-check">
+        <available file="${composerphar}" property="composer.present"/>
+    </target>
+
+    <target name="composer-download"
+            depends="composer-check"
+            unless="composer.present">
+        <property name="composer.noselfupdate" value="true"/>
+        <exec executable="wget" dir="${builddir}" passthru="true" logoutput="true">
+            <arg line="https://getcomposer.org/composer.phar" />
+        </exec>
+    </target>
+
+    <target name="composer-selfupdate"
+            depends="php-check,composer-download"
+            unless="composer.noselfupdate">
+        <exec executable="${php}">
+            <arg value="${composerphar}"/>
+            <arg value="self-update"/>
+            <arg value="--quiet"/>
+        </exec>
+    </target>
+
+    <!-- Install or Update the Dependancies -->
+    <target name="composer-install"
+            depends="composer-selfupdate"
+            description="Installing composer dependencies">
+        <exec executable="php" passthru="true" logoutput="true">
+            <arg value="${composerphar}" />
+            <arg value="install" />
+            <arg value="--prefer-dist" />
+            <arg value="--no-progress" />
+        </exec>
+    </target>
+
+    <target name="composer-update"
+            depends="composer-selfupdate"
+            description="Manual update composer dependencies">
+        <exec executable="php" passthru="true" logoutput="true">
+            <arg value="${composerphar}" />
+            <arg value="update" />
+            <arg value="--prefer-dist" />
+            <arg value="--no-progress" />
+        </exec>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!--             Targets used to CLEAN the BUILD ENVIRONMENT            -->
+    <!-- ================================================================== -->
+    <target name="clean-artifacts">
+        <delete dir="${basedir}/build/logs"/>
+        <delete file="${basedir}/build/phar-app.phar" />
+        <property name="clean.done" value="true"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!--           Targets used to PREPARE the BUILD ENVIRONMENT            -->
+    <!-- ================================================================== -->
+
+    <target name="prepare-build"
+            unless="prepare.done"
+            depends="composer-install, clean"
+            description="Prepare for build">
+        <mkdir dir="${basedir}/build/logs"/>
+        <property name="prepare.done" value="true"/>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!--                      Code Analysis Targets                         -->
+    <!-- ================================================================== -->
+     <target name="lint" description="Perform syntax check of sourcecode files">
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
+
+            <fileset dir="${basedir}/bin">
+                <include name="**/*" />
+            </fileset>
+
+            <fileset dir="${basedir}/src">
+                <include name="**/*.php" />
+            </fileset>
+        </apply>
+    </target>
+
+   <target name="phpcs"
+        description="Find coding standard violations using PHP_CodeSniffer.">
+        <exec checkreturn="true" passthru="true" logoutput="true" executable="${toolsdir}phpcs">
+            <arg value="--standard=${basedir}/build/phpcs.xml" />
+            <arg value="--extensions=php" />
+            <arg value="--ignore=autoload.php " />
+            <arg path="${basedir}/src" />
+         </exec>
+    </target>
+
+    <target name="phpcbf"
+            description="Fix coding standard violations using PHP_CodeSniffer.">
+        <exec executable="${toolsdir}phpcbf" passthru="true" logoutput="true">
+            <arg value="--standard=${basedir}/build/phpcs.xml" />
+            <arg path="${basedir}/src" />
+        </exec>
+    </target>
+
+    <target name="phpmd"
+            description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
+        <exec executable="${toolsdir}phpmd" passthru="true" logoutput="true">
+            <arg path="${basedir}/src/" />
+            <arg value="text" />
+            <arg path="${basedir}/build/phpmd.xml" />
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!--           Targets used to Build the Phar file            -->
+    <!-- ================================================================== -->
+
+    <target name="build-phar"
+            depends="prepare"
+            description="Build the Phar file">
+        <exec executable="${toolsdir}phar-builder">
+            <arg value="package" />
+            <arg path="${basedir}/composer.json" />
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!--                          Build Targets                             -->
+    <!-- ================================================================== -->
+
+    <target name="composer" depends="composer-install"/>
+
+    <target name="clean" depends="clean-artifacts"/>
+
+    <target name="prepare" depends="clean, prepare-build"/>
+
+    <target name="code-analysis" depends="lint, phpcs, phpmd" />
+
+    <!-- Default Build Target -->
+    <target name="build"
+            depends="composer, clean, prepare, code-analysis, build-phar"/>
+
+</project>

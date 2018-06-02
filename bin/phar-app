@@ -1,5 +1,19 @@
 #!/usr/bin/env php
 <?php
+/**
+ * This file is part of PharApp
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or follow the link below.
+
+ * @category  PHP
+ * @package   PharApp
+ * @author    Sandy McNeil <g7mzrdev@gmail.com>
+ * @copyright 2018 Sandy McNeil
+ * @license   https://github.com/g7mzr/phar-app/blob/master/LICENSE GNU GPL v3.0
+ * @link      https://github.com/g7mzr/phar-app
+ */
+
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require __DIR__ . '/../vendor/autoload.php';
 } elseif (file_exists(__DIR__ . '/../../../autoload.php')) {
@@ -9,4 +23,8 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     exit(1);
 }
 $app = new \g7mzr\pharapp\App();
-$app->run();
+$result = $app->run();
+if ($result === false) {
+    exit(1);
+}
+exit (0);

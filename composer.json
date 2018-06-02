@@ -9,7 +9,13 @@
         }
     ],
     "require": {
+        "php" : ">=7.0.2",
         "ulrichsg/getopt-php" : "^3.0"
+    },
+    "require-dev": {
+        "macfja/phar-builder" : "*",
+        "squizlabs/php_codesniffer": "2.*",
+        "phpmd/phpmd" : "@stable"
     },
     "autoload": {
         "psr-4": {"g7mzr\\pharapp\\": "src/" }
