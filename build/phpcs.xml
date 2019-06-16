@@ -5,15 +5,32 @@
 
     <description>PharApp Coding Standard</description>
 
-        <!--  Default Standard is PSR2 -->
-        <rule ref="PSR2"/>
+    <!-- Rule Sets -->
+        <!--  Default Standard is PSR12 -->
+        <rule ref="PSR12"/>
 
-        <!-- Include the PEAR Commenting Standard to ensure code is commented -->
-        <rule ref="PEAR.Commenting">
-            <exclude name="PEAR.Commenting.FileComment.MissingVersion" />
-            <exclude name="PEAR.Commenting.ClassComment.InvalidAuthors"/>
-            <exclude name="PEAR.Commenting.ClassComment.IncompleteLicense"/>
-            <exclude name="PEAR.Commenting.ClassComment.MissingCategoryTag"/>
-            <exclude name="PEAR.Commenting.ClassComment.MissingLinkTag"/>
+        <rule ref="Squiz.Commenting.FunctionComment" />
+        <rule ref="Squiz.Commenting.FunctionCommentThrowTag" />
+        <rule ref="Squiz.Commenting.ClassComment">
+            <exclude name="Squiz.Commenting.ClassComment.TagNotAllowed" />
         </rule>
+        <rule ref="Squiz.Commenting.FileComment">
+            <exclude name="Squiz.Commenting.FileComment.IncorrectAuthor" />
+            <exclude name="Squiz.Commenting.FileComment.IncorrectCopyright" />
+        </rule>
+        <!--<rule ref="Squiz.Commenting.VariableComment" /> -->
+
+        <!-- Rules to exclude -->
+
+        <!-- Rules to exclude from Specific files
+        <rule ref="Generic.Files.LineLength">
+
+        </rule>-->
+        <rule ref="PSR1.Files.SideEffects">
+            <!-- Exclude from unit tests as autoloader needs to be included -->
+            <exclude-pattern>*/tests/*</exclude-pattern>
+        </rule>
+
+        <!-- Directorys to exclude as they only contain tempory files -->
+        <exclude-pattern>*/vendor/*</exclude-pattern>
 </ruleset>

@@ -18,14 +18,16 @@ namespace g7mzr\pharapp\Commands;
 use GetOpt\Command;
 use GetOpt\GetOpt;
 use GetOpt\Operand;
+use GetOpt\Option;
 
 /**
- * TestCommand Class
+ * Setup is a test command for PharApp.
  *
- * This is a Test Command created by extending the \GetOpt\Command base class.
- *
+ * @package  PharApp
+ * @author   Sandy McNeil <g7mzrdev@gmail.com>
+ * @license  https://github.com/g7mzr/phar-app/blob/master/LICENSE GNU GPL v3.0
  */
-class TestCommand extends Command
+class SetupCommand extends Command
 {
     /**
      * Constructor
@@ -35,20 +37,21 @@ class TestCommand extends Command
      */
     public function __construct()
     {
-        parent::__construct('test', [$this, 'handle']);
+        parent::__construct('setup', [$this, 'handle']);
 
         // Set up Operands fot Test Command
-        $sourceoperand = new Operand('source', Operand::REQUIRED);
-        $sourceoperand->setValidation("is_readable");
-        $destinationoperand = new Operand('destination', Operand::REQUIRED);
-        $this->addOperands([$sourceoperand, $destinationoperand]);
 
-        // Setup decription for Test Command
+        // Setup description for Test Command
         $this->setDescription(
-            'This is a test command for phar-test useing getopt/getopt.' .
-                    PHP_EOL .
-                    'It returns the source and destination file names'
-        )->setShortDescription('Test Command');
+            'This is a test command for phar-test using getopt/getopt.' . PHP_EOL
+        )->setShortDescription('Setup');
+
+        $this->addOptions(
+            [
+            Option::create('b', 'beta', GetOpt::NO_ARGUMENT)
+                  ->setDescription("Setup Option")
+            ]
+        );
     }
 
     /**
@@ -60,11 +63,10 @@ class TestCommand extends Command
      */
     public function handle(GetOpt $getOpt)
     {
-        echo PHP_EOL;
-        echo "TEST COMMAND" . PHP_EOL . PHP_EOL;
-        echo "Source File: " . $getOpt->getOperand('source')  . PHP_EOL;
-        echo "Destination File: " . $getOpt->getOperand('destination') . PHP_EOL;
-        echo PHP_EOL;
+        echo $getOpt->getCommand()->getName() . " works." . PHP_EOL;
+        if ($getOpt->getOption("beta")) {
+            echo "BETA is set" . PHP_EOL;
+        }
         return true;
     }
 }
